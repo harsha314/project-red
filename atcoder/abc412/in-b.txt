@@ -1,0 +1,7 @@
+3
+abcde
+XYZ
+aBCdE
+abcdcba
+AtCoder
+Total
