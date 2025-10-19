@@ -32,6 +32,7 @@ vector<int> prefix_function(string &s) {
 }
 
 int count_of_s_in_t(string &s, string &t) {
+  s += '#';
   int n = s.size(), m = t.size();
   vector<int> pi = prefix_function(s);
   int prev = 0;
