@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 #define ll long long
 #define pii pair<int, int>
 #define mp make_pair
@@ -17,20 +18,24 @@ int main() {
 void solve() {
   int n;
   cin >> n;
-  vector<int> a(n - 1), c(n - 1);
-  for (int &x : c) cin >> x;
-  for (int &x : a) cin >> x;
-  vector<int> dp(n - 1, n);
-  dp[0] = 1;
-  for (int i = 1; i < a.size(); ++i) {
+  vector<int> a(n), c(n);
+  for (int i = 1; i < n; ++i) cin >> c[i];
+  for (int i = 1; i < n; ++i) cin >> a[i];
+  vector<int> dp(n, n);
+  dp[0] = 0;
+  for (int i = 1; i < n; ++i) {
+    // if (a[i] > 0) {
     for (int j = i - 1; j >= i - c[i] && j >= 0; --j) {
-      dp[i] = min(dp[i], 1 + dp[j]);
+      if (a[j] > 0 || j == 0) dp[i] = min(dp[i], 1 + dp[j]);
     }
+    // } else
+    // dp[i] = dp[i - 1];
   }
   int ans = 0;
-  for (int i = 0; i < a.size(); ++i) {
+  for (int i = 0; i < n; ++i) {
     if (a[i] > 0) ans = max(ans, dp[i]);
   }
-  for (int &x : dp) cout << x << " ";
+  for (int& x : dp) cout << x << " ";
+  cout << "\n";
   cout << ans << "\n";
 }
