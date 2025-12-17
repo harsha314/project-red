@@ -1,0 +1,12 @@
+
+#include <iostream>
+#include <utility>
+
+using namespace std;
+
+struct PairHash {
+  template <typename T1, typename T2>
+  auto operator()(const pair<T1, T2>& p) const -> size_t {
+    return hash<T1>{}(p.first) ^ hash<T2>{}(p.second);
+  }
+};

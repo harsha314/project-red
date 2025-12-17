@@ -32,13 +32,8 @@ void solve() {
   int pMax = *max_element(P.begin(), P.end());
   int R = aMax + pMax;
   vector<vector<int>> dp(N + 1, vector<int>(R + 1, -1));
-  for (int j = 0; j <= R; ++j) {
-    if (j <= P[N - 1])
-      dp[N - 1][j] = j + A[N - 1];
-    else
-      dp[N - 1][j] = max(j - B[N - 1], 0);
-  }
-  for (int i = N - 2; i >= 0; --i) {
+  iota(dp[N].begin(), dp[N].end(), 0);
+  for (int i = N - 1; i >= 0; --i) {
     for (int j = 0; j <= R; ++j) {
       if (j <= P[i]) {
         dp[i][j] = dp[i + 1][j + A[i]];
@@ -46,36 +41,23 @@ void solve() {
         dp[i][j] = dp[i + 1][max(j - B[i], 0)];
     }
   }
-  // for (int i = 0; i < N; ++i) {
-  //   for (int j = 0; j <= R; ++j) cout << dp[i][j] << " ";
-  //   cout << "\n";
-  // }
   vector<int> prefixB(N);
   prefixB[0] = B[0];
   for (int i = 1; i < N; ++i) prefixB[i] = prefixB[i - 1] + B[i];
-  vector<int> prefixMaxP(N);
-  prefixMaxP[0] = P[0];
-  for (int i = 1; i < N; ++i) prefixMaxP[i] = max(prefixMaxP[i], P[i]);
   int Q;
   cin >> Q;
   for (int i = 0; i < Q; ++i) {
     int X;
     cin >> X;
-    // int j = 0;
-    // while (X > R && j < N && X > P[j]) {
-    //   X -= B[j];
-    //   ++j;
-    // }
-    // if (j < N) {
-    //   cout << dp[j][X] << "\n";
-    // } else {
-    //   cout << X << "\n";
-    // }
-    if (X < R) {
+    if (X <= R) {
       cout << dp[0][X] << "\n";
       continue;
     }
-
     auto it = lower_bound(prefixB.begin(), prefixB.end(), X - R);
+    if (it == prefixB.end()) {
+      cout << (X - prefixB.back()) << "\n";
+      continue;
+    }
+    cout << dp[it - begin(prefixB) + 1][X - min(X, *it)] << "\n";
   }
 }
