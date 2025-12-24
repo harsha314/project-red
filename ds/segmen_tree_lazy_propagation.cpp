@@ -1,33 +1,16 @@
-
 #include <iostream>
 #include <vector>
 #define ll long long
 
-using namespace std;
-
 ll MOD = 998244353;
 
-ll binexp(ll b, ll e) {
-  if (e == 0) return 1;
-  if (e & 1) {
-    return (b * binexp(b, e - 1)) % MOD;
-  } else {
-    ll result = binexp(b, e >> 1);
-    return (result * result) % MOD;
-  }
-}
-
+using namespace std;
 class SegmentTree {
  public:
   SegmentTree(int N) : size(N) {
     tree.assign(N * 4 + 7, 0);
     lazy.assign(N * 4 + 7, 0);
     marked.assign(N * 4 + 7, false);
-  }
-
-  SegmentTree(const vector<ll>& a) : SegmentTree(a.size()) {
-    size = a.size();
-    build(a, 1, 1, size);
   }
 
   ll query(int l, int r) { return query(1, 1, size, l, r); }
@@ -38,17 +21,6 @@ class SegmentTree {
   vector<ll> lazy;
   vector<bool> marked;
   int size;
-
-  void build(const vector<ll>& a, int v, int tl, int tr) {
-    if (tl == tr) {
-      tree[v] = a[tl - 1] % MOD;  // Adjusting for 0-indexed input vector
-    } else {
-      int tm = (tl + tr) / 2;
-      build(a, v * 2, tl, tm);
-      build(a, v * 2 + 1, tm + 1, tr);
-      tree[v] = (tree[v * 2] + tree[v * 2 + 1]) % MOD;
-    }
-  }
 
   // Critical fix: Applying value depends on segment length (tr - tl + 1)
   void apply(int v, int tl, int tr, ll V) {
@@ -91,37 +63,3 @@ class SegmentTree {
     }
   }
 };
-
-void solve() {
-  int N, M;
-  cin >> N >> M;
-  vector<ll> A(N);
-  for (int i = 0; i < N; ++i) cin >> A[i];
-  SegmentTree tree(A);
-  for (int i = 0; i < M; ++i) {
-    int L, R;
-    cin >> L >> R;
-    ll P = tree.query(L, R);
-    ll Q = (R - L + 1);
-    ll V = (P * binexp(Q, MOD - 2)) % MOD;
-    tree.update(L, R, V);
-  }
-  cout << "\n";
-  for (int i = 1; i <= N; ++i) {
-    cout << tree.query(i, i) << " ";
-  }
-  cout << "\n";
-}
-
-int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
-  int T = 1;
-  // cin >> T;
-  for (int t = 1; t <= T; ++t) {
-    // cout << "Case " << t << " : \n";
-    solve();
-    // cout << "\n";
-  }
-  return 0;
-}
