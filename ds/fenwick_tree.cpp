@@ -19,7 +19,7 @@ class FenwickTree {
   }
   ll query(int r) {
     ll result = 0;
-    for (; r >= 1; r = g(r)) {
+    for (; r >= 0; r = g(r)) {
       result += tree[r];
     }
     return result;
@@ -30,7 +30,7 @@ class FenwickTree {
   }
 
   void update(int idx, ll v) {
-    for (; idx <= size; idx = f(idx)) {
+    for (; idx < size; idx = f(idx)) {
       tree[idx] = v;
     }
   }
