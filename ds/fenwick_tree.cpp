@@ -19,7 +19,7 @@ class FenwickTree {
   }
   ll query(int r) {
     ll result = 0;
-    for (; r >= 0; r = g(r)) {
+    for (; r >= 0; r = g(r) - 1) {
       result += tree[r];
     }
     return result;

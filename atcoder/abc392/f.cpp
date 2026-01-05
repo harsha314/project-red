@@ -13,11 +13,11 @@ class FenwickTree {
  public:
   FenwickTree(int size) {
     this->size = size;
-    this->tree = new ll[size + 1];
+    this->tree = new ll[size];
   }
   ll query(int r) {
     ll result = 0;
-    for (; r >= 1; r = g(r)) {
+    for (; r >= 0; r = g(r) - 1) {
       result += tree[r];
     }
     return result;
@@ -28,8 +28,8 @@ class FenwickTree {
   }
 
   void update(int idx, ll delta) {
-    for (; idx <= size; idx = f(idx)) {
-      tree[idx] = delta;
+    for (; idx < size; idx = f(idx)) {
+      tree[idx] += delta;
     }
   }
 
@@ -44,32 +44,34 @@ void solve() {
   vector<int> P(N);
   for (int i = 0; i < N; ++i) cin >> P[i];
   vector<int> B(N);
-  FenwickTree ft(N);
+  FenwickTree ft(N + 1);
   for (int i = 1; i <= N; ++i) ft.update(i, 1);
   for (int i = N - 1; i >= 0; --i) {
     int I = P[i];
-    ft.update(I, 0);
     int l = 1, r = N;
     while (l <= r) {
       int mid = (l + r) >> 1;
-      int count = ft.query(1, mid);
+      int count = ft.query(mid);
       if (count > I) {
         r = mid - 1;
       } else if (count == I) {
         B[i] = mid;
-        ft.update(mid, -1);
-        break;
+        r = mid - 1;
       } else {
         l = mid + 1;
       }
     }
+    ft.update(B[i], -1);
   }
+  for (int i = 0; i < N; ++i) cout << B[i] << " ";
+  cout << "\n";
 }
 
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
   int T = 1;
+  cin >> T;
   for (int t = 1; t <= T; ++t) {
     solve();
   }
