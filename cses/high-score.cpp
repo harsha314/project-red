@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <iostream>
+#include <queue>
 #include <vector>
 #define ll long long
 
@@ -31,23 +32,42 @@ void solve() {
   for (int i = 1; i < N; ++i) {
     for (vector<int>& edge : edges) {
       int u = edge[0], v = edge[1], w = edge[2];
-      if (D[u] != inf) D[v] = max(D[v], w + D[u]);
+      if (D[u] != -inf) D[v] = max(D[v], w + D[u]);
     }
     // cout << D << "\n";
   }
   ll ans = D[N];
-  for (int i = 0; i < N; ++i) {
-    for (vector<int>& edge : edges) {
-      int u = edge[0], v = edge[1], w = edge[2];
-      if (D[u] != inf) {
-        D[v] = max(D[v], D[u] + w);
+  vector<int> isInCycle(N + 1, 0);
+  vector<vector<int>> revAdj(N + 1);
+
+  for (vector<int>& edge : edges) {
+    int u = edge[0], v = edge[1], w = edge[2];
+    if (D[u] != -inf && D[v] < D[u] + w) {
+      isInCycle[u] = 1;
+      isInCycle[v] = 1;
+    }
+    revAdj[v].push_back(u);
+  }
+
+  vector<bool> vis(N + 1, 0);
+  queue<int> que;
+  que.push(N);
+  vis[N];
+  while (!que.empty()) {
+    int u = que.front();
+    que.pop();
+    if (isInCycle[u]) {
+      cout << -1 << "\n";
+      return;
+    }
+    for (int v : revAdj[u]) {
+      if (!vis[v]) {
+        que.push(v);
+        vis[v] = 1;
       }
     }
   }
-  if (ans == D[N])
-    cout << ans << "\n";
-  else
-    cout << -1 << "\n";
+  cout << ans << "\n";
 }
 
 int main() {
