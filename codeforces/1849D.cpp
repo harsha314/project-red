@@ -36,7 +36,7 @@ void solve() {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    int T = 1;
+    int T = 1;;
     // cin >> T;
     for(int i = 0; i < T; ++i) {
         solve();
